@@ -1,4 +1,4 @@
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Board";
 import Navbar from "./components/Navbar";
 
 function App() {
