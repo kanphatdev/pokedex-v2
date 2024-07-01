@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PokemonCards from "./PokemonCards";
 import Skeleton from "../UI_State/Skeleton";
 
@@ -21,7 +22,7 @@ const PokemonList = () => {
           }
         );
 
-        setPoke(response.data.results); // Assuming 'results' is the key that holds the array of Pokemon
+        setPoke(response.data.results);
         setError("");
       } catch (err) {
         setError(
@@ -45,7 +46,9 @@ const PokemonList = () => {
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {poke.map((pokemon, index) => (
-            <PokemonCards index={index} pokemon={pokemon} key={pokemon.name} />
+            <Link to={`/pokemon/${pokemon.name}`} key={pokemon.name}>
+              <PokemonCards index={index} pokemon={pokemon} />
+            </Link>
           ))}
         </div>
       )}

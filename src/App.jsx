@@ -1,14 +1,22 @@
-import Dashboard from "./components/Board";
+
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import PokemonList from "./components/pokemon/PokemonList";
+import PokemonDetail from "./pages/PokemonDetail";
 
 function App() {
   return (
-    <div className="App   ">
-      <Navbar />
-      <div className="pt-16 px-6 ">
-        <Dashboard/>
-      </div>
-    </div>
+    <Router>
+      <main>
+        <Navbar />
+        <div className="pt-16 px-6">
+          <Routes>
+            <Route path="/" element={<PokemonList />} />
+            <Route path="/pokemon/:name" element={<PokemonDetail />} />
+          </Routes>
+        </div>
+      </main>
+    </Router>
   );
 }
 
