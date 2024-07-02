@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import PokemonList from "./components/pokemon/PokemonList";
 import PokemonDetail from "./pages/PokemonDetail";
 import PokemonGrid from "./components/pokemon/PokemonGrid";
+import Pocket from "./components/pokemon/Pocket";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<PokemonGrid />} />
             <Route path="/pokemonlist" element={<PokemonList />} />
             <Route path="/pokemon/:name" element={<PokemonDetail />} />
+            <Route path="/pocketball" element={<Pocket />} />
           </Routes>
         </div>
       </main>

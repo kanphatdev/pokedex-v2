@@ -54,7 +54,7 @@ const PokemonGrid = () => {
     <div className="container mx-auto p-4">
       <div className="flex gap-4 justify-between items-center">
         <div className="">
-          <h1 className="text-2xl font-bold capitalize">Product</h1>
+          <h1 className="text-2xl font-bold capitalize">Pokémon grid </h1>
         </div>
         <div className="">
           <div className="join">

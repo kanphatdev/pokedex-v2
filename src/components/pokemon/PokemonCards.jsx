@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export const PokemonCards = ({ pokemon, index }) => {
   return (
@@ -19,10 +20,12 @@ export const PokemonCards = ({ pokemon, index }) => {
         />
       </div>
       <div>
-        {/* Add other Pokemon details here if available */}
         <p className="text-gray-700 text-xl font-bold mb-2 capitalize text-center">
           {pokemon.name}
         </p>
+        <Link to={`/pokemon/${pokemon.name}`} className="btn btn-active btn-neutral w-full">
+          Detail
+        </Link>
       </div>
     </div>
   );
