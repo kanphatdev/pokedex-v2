@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+
 export const PokemonCards = ({ pokemon, index }) => {
   return (
     <div
@@ -27,8 +28,12 @@ export const PokemonCards = ({ pokemon, index }) => {
   );
 };
 
+PokemonCards.propTypes = {
+  pokemon: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    // Add other required properties if available
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+};
+
 export default PokemonCards;
-PokemonCards.propTypes ={
-  pokemon:PropTypes.string,
-  index:PropTypes.any
-}

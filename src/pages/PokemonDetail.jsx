@@ -52,9 +52,12 @@ export const PokemonDetail = () => {
           }
         );
 
-        // Fetch species details to get the description and catch rate
+        // Fetch species details to get the description, catch rate, and gender ratio
         let speciesResponse = await axios.get(response.data.species.url);
         let speciesData = speciesResponse.data;
+
+        // Extract egg groups
+        let eggGroups = speciesData.egg_groups.map((group) => group.name);
 
         setPoke({
           ...response.data,
@@ -62,6 +65,9 @@ export const PokemonDetail = () => {
             (entry) => entry.language.name === "en" // Filter for English description
           ).flavor_text,
           catchRate: speciesData.capture_rate, // Add catch rate
+          eggGroups: eggGroups.join(", "), // Convert egg groups array to string
+          primaryType: response.data.types[0].type.name, // Get primary type
+          genderRatio: speciesData.gender_rate, // Add gender ratio
         });
         setError("");
       } catch (err) {
@@ -82,31 +88,21 @@ export const PokemonDetail = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  // Extract the HP, Attack, Defense, Speed, Special Attack, and Special Defense stats from the stats array
-  const hpStat = poke?.stats.find((stat) => stat.stat.name === "hp");
-  const attackStat = poke?.stats.find((stat) => stat.stat.name === "attack");
-  const defenseStat = poke?.stats.find((stat) => stat.stat.name === "defense");
-  const speedStat = poke?.stats.find((stat) => stat.stat.name === "speed");
-  const specialAttackStat = poke?.stats.find(
-    (stat) => stat.stat.name === "special-attack"
-  );
-  const specialDefenseStat = poke?.stats.find(
-    (stat) => stat.stat.name === "special-defense"
-  );
-
-  // Get the primary type and its color
-  const primaryType = poke?.types[0]?.type.name;
-  const primaryTypeColor = TYPE_COLORS[primaryType];
+  // Extract the stats from the stats array
+  const stats = poke?.stats.reduce((accumulator, stat) => {
+    accumulator[stat.stat.name] = stat.base_stat;
+    return accumulator;
+  }, {});
 
   return (
     <div className="hero sticky bg-base-200 min-h-screen">
-      <div className="hero-content flex-col lg:flex-row">
+      <div className="hero-content flex flex-col lg:flex-row">
         {poke && (
           <>
             <img
               src={poke.sprites.other["official-artwork"].front_default}
               alt={poke.name}
-              className="max-w-sm rounded-lg shadow-2xl"
+              className="max-w-xs lg:max-w-sm rounded-lg shadow-2xl mb-4 lg:mb-0"
             />
             <div>
               <h1 className="text-5xl font-bold capitalize">{poke.name}</h1>
@@ -116,132 +112,108 @@ export const PokemonDetail = () => {
                     <ArrowLeftFromLine />
                   </Link>
                 </div>
-                <div className="py-6 flex gap-4">
-                  {/* stat section */}
-                  <div className="">
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <HeartPulse style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={hpStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {hpStat?.base_stat}
-                      </span>
-                    </div>
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <Sword style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={attackStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {attackStat?.base_stat}
-                      </span>
-                    </div>
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <Shield style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={defenseStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {defenseStat?.base_stat}
-                      </span>
-                    </div>
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <Zap style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={speedStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {speedStat?.base_stat}
-                      </span>
-                    </div>
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <Swords style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={specialAttackStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {specialAttackStat?.base_stat}
-                      </span>
-                    </div>
-                    <div className="flex gap-3 items-center justify-center py-3">
-                      <p className="uppercase">
-                        <ZapOff style={{ color: `#${primaryTypeColor}` }} />
-                      </p>
-                      <progress
-                        className="progress w-96"
-                        value={specialDefenseStat?.base_stat}
-                        max="100"
-                        style={{ backgroundColor: `#${primaryTypeColor}` }}
-                      ></progress>
-                      <span style={{ color: `#${primaryTypeColor}` }}>
-                        {specialDefenseStat?.base_stat}
-                      </span>
-                    </div>
-
-                    <div className="bg-white shadow-md rounded-lg p-8 max-w-sm">
+                <div className="py-6 flex flex-col lg:flex-row gap-4">
+                  {/* Stats Section */}
+                  <div className="w-full lg:w-1/2">
+                    {['hp', 'attack', 'defense', 'speed', 'special-attack', 'special-defense'].map((stat) => (
+                      <div key={stat} className="flex gap-3 items-center justify-center py-3">
+                        <p className="uppercase">
+                          {stat === 'hp' && <HeartPulse className="text-red-400" />}
+                          {stat === 'attack' && <Sword className="text-yellow-400" />}
+                          {stat === 'defense' && <Shield className="text-blue-400" />}
+                          {stat === 'speed' && <Zap className="text-green-400" />}
+                          {stat === 'special-attack' && <Swords className="text-purple-400" />}
+                          {stat === 'special-defense' && <ZapOff className="text-cyan-400" />}
+                        </p>
+                        <progress
+                          className="progress w-full lg:w-96"
+                          value={stats[stat]}
+                          max="100"
+                          style={{ backgroundColor: `#${TYPE_COLORS[poke.primaryType]}` }}
+                        ></progress>
+                        <span className={`text-${TYPE_COLORS[poke.primaryType]}`}>{stats[stat]}</span>
+                      </div>
+                    ))}
+                    <div className="bg-white shadow-md rounded-lg p-8 mt-4 lg:mt-0 max-w-full lg:max-w-sm">
                       <p className="text-gray-600 mb-6 capitalize">
                         {poke.description}
                       </p>
                     </div>
                   </div>
-                  {/* close stat section */}
-                  <div className="">
-                    <div className="stats shadow">
-                      <div className="stat place-items-center">
-                        <div className="stat-title uppercase">Height</div>
-                        <div className="stat-value">{poke.height}</div>
-                        <div className="stat-desc capitalize">
-                          Height of {poke.name}
+                  {/* End Stats Section */}
+                  <div className="w-full lg:w-1/2">
+                    <div className="stats shadow flex flex-col lg:flex-row gap-4">
+                      {/* Egg Groups */}
+                      <div className="stat">
+                        <div className="stat-title text-gray-600">Egg Groups</div>
+                        <div className="stat-value capitalize">
+                          <div className="badge badge-ghost text-white" style={{ backgroundColor: `#${TYPE_COLORS[poke.primaryType]}` }}>
+                            {poke.eggGroups}
+                          </div>
                         </div>
+                        <div className="stat-desc text-center text-gray-500 capitalize">Race of {poke.name}</div>
                       </div>
 
-                      <div className="stat place-items-center">
-                        <div className="stat-title uppercase">Weight</div>
-                        <div className="stat-value ">{poke.weight}</div>
-                        <div className="stat-desc capitalize">
-                          Weight of {poke.name}
+                      {/* Abilities */}
+                      <div className="stat">
+                        <div className="stat-title text-gray-600">Abilities</div>
+                        <div className="stat-value flex flex-wrap gap-2 justify-center">
+                          {poke.abilities.map((abilityObj, index) => (
+                            <span key={index} className="badge badge-ghost capitalize text-white" style={{ backgroundColor: `#${TYPE_COLORS[poke.primaryType]}` }}>
+                              {abilityObj.ability.name}
+                            </span>
+                          ))}
                         </div>
+                        <div className="stat-desc text-gray-500 capitalize text-center">Abilities of {poke.name}</div>
                       </div>
 
-                      <div className="stat place-items-center">
-                        <div className="stat-title">Catch Rate</div>
-                        <div
-                          className="stat-value"
-                          style={{ color: `#${primaryTypeColor}` }}
-                        >
-                          {poke.catchRate}
+                      {/* Gender Ratio */}
+                      <div className="stat">
+                        <div className="stat-title text-gray-600">Gender Ratio</div>
+                        <div className="stat-value">
+                          <progress
+                            className="progress w-full lg:w-96"
+                            value={poke.genderRatio}
+                            max="8"
+                            style={{ backgroundColor: `#${TYPE_COLORS[poke.primaryType]}` }}
+                          ></progress>
+                          <span className="text-gray-600">{poke.genderRatio} : {(8 - poke.genderRatio)}</span>
                         </div>
                       </div>
                     </div>
+
+                    {/* Additional Info */}
+                    <div className="flex justify-center items-center py-6">
+                      <div className="stats stats-vertical lg:stats-horizontal shadow">
+                        <div className="stat place-items-center">
+                          <div className="stat-title uppercase">Height</div>
+                          <div className="stat-value" style={{ color: `#${TYPE_COLORS[poke.primaryType]}` }}>
+                            {poke.height}
+                          </div>
+                          <div className="stat-desc capitalize">Height of {poke.name}</div>
+                        </div>
+
+                        <div className="stat place-items-center">
+                          <div className="stat-title uppercase">Weight</div>
+                          <div className="stat-value" style={{ color: `#${TYPE_COLORS[poke.primaryType]}` }}>
+                            {poke.weight}
+                          </div>
+                          <div className="stat-desc capitalize">Weight of {poke.name}</div>
+                        </div>
+
+                        <div className="stat place-items-center">
+                          <div className="stat-title">Catch Rate</div>
+                          <div className="stat-value" style={{ color: `#${TYPE_COLORS[poke.primaryType]}` }}>
+                            {poke.catchRate}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* End Additional Info */}
                   </div>
                 </div>
-                <div className="card-actions justify-end flex gap-4 ">
+                {/* Types */}
+                <div className="card-actions justify-end flex flex-wrap gap-4">
                   {poke.types.map((typeObj, index) => (
                     <span
                       key={index}
@@ -255,6 +227,7 @@ export const PokemonDetail = () => {
                     </span>
                   ))}
                 </div>
+                {/* End Types */}
               </div>
             </div>
           </>
