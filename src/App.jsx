@@ -15,7 +15,7 @@ function App() {
             <Route path="/" element={<PokemonGrid />} />
             <Route path="/pokemonlist" element={<PokemonList />} />
             <Route path="/pokemon/:name" element={<PokemonDetail />} />
-            <Route path="/pocketball" element={<Pocket />} />
+            <Route path="/pocketball/pokemon/:name" element={<Pocket />} />
           </Routes>
         </div>
       </main>

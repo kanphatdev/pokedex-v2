@@ -30,6 +30,8 @@ export const PokemonDetail = () => {
   const [poke, setPoke] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [quantity, setQuantity] = useState(0); // State for Pokémon quantity
+  const [pocket, setPocket] = useState([]); // State for the pocket
 
   useEffect(() => {
     let abortController = new AbortController();
@@ -78,8 +80,32 @@ export const PokemonDetail = () => {
   }, [name]);
 
   const addToPocket = () => {
-    // Implement your logic to add the Pokemon to the pocket
-    console.log(`Added ${poke.name} to pocket!`);
+    // Check if the Pokemon is already in pocket
+    const existingPokemon = pocket.find(item => item.name === poke.name);
+
+    if (existingPokemon) {
+      // Update quantity if already in pocket
+      const updatedPocket = pocket.map(item =>
+        item.name === poke.name ? { ...item, quantity: item.quantity + quantity } : item
+      );
+      setPocket(updatedPocket);
+    } else {
+      // Add new Pokemon to pocket
+      setPocket([...pocket, { name: poke.name, quantity }]);
+    }
+
+    // Reset quantity after adding to pocket
+    setQuantity(0);
+  };
+
+  const incrementQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 0) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -279,17 +305,21 @@ export const PokemonDetail = () => {
                     </div>
                     {/* End Additional Info */}
                     <div className="flex gap-4 items-center ">
-                        <div className=""><button className="btn btn-ghost">+</button></div>
+                     
+                        <div className=""><button className="btn btn-ghost" onClick={incrementQuantity}>+</button></div>
                         <div className="">
-                        <span className="badge">0</span>
+                        <span className="badge">{quantity}</span>
                         </div>
                         <div className="">
-                        <button className="btn btn-ghost">-</button>
+                        <button className="btn btn-ghost" onClick={decrementQuantity}>-</button>
                        
                         </div>
                       </div>
                       <div className="flex items-center py-4">
-                      <button onClick={addToPocket} className="btn bg-orange-400 text-white mr-8 capitalize">add to pocket <ShoppingBag className="text-white" /></button>
+                        <Link to={"/pocketball"}>
+                        <button onClick={addToPocket} className="btn bg-orange-400 text-white mr-8 capitalize">add to pocket <ShoppingBag className="text-white" /></button>
+                        </Link>
+                      
 
                       </div>
                   </div>
