@@ -1,125 +1,112 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Skeleton from "../UI_State/Skeleton";
-import { Trash2 } from "lucide-react";
+import React from "react";
+import { Trash2 } from "lucide-react"; // Make sure you have Lucide icons installed
 
 const Pocket = () => {
-  const [poke, setPoke] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    let abortController = new AbortController();
-
-    const loadPoke = async () => {
-      try {
-        setLoading(true);
-
-        // Fetch stored Pokémon from localStorage
-        const storedPocket = JSON.parse(localStorage.getItem("pocket")) || [];
-
-        // Fetch details for each Pokémon in the storedPocket
-        const pokemonDetails = await Promise.all(
-          storedPocket.map(async (pokemon) => {
-            const details = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`);
-            return {
-              ...pokemon,
-              id: details.data.id,
-              types: details.data.types.map((typeInfo) => typeInfo.type.name),
-              abilities: details.data.abilities.map((abilityInfo) => abilityInfo.ability.name),
-              sprite: details.data.sprites.front_default,
-            };
-          })
-        );
-
-        setPoke(pokemonDetails);
-        setError("");
-      } catch (err) {
-        setError(
-          <>
-            <Skeleton />
-          </>
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPoke();
-    return () => abortController.abort();
-  }, []);
-
-  // Function to handle removing Pokémon from pocket
-  const removeFromPocket = (pokemonName) => {
-    const updatedPocket = poke.filter((pokemon) => pokemon.name !== pokemonName);
-    setPoke(updatedPocket);
-    localStorage.setItem("pocket", JSON.stringify(updatedPocket));
-  };
-
-  // Function to determine CSS class based on Pokemon type
-  const getTypeClass = (type) => {
-    switch (type.toLowerCase()) {
-      // Type color cases
-    }
-  };
-
-  if (loading) {
-    return <div><Skeleton/></div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold capitalize mb-4">Pokémon List</h1>
-      </div>
-      <div className="grid grid-cols-1 gap-4">
-        {poke.map((pokemon, index) => (
-          <Link to={`/pokemon/${pokemon.name}`} key={index}>
-            <div className="flex items-center  justify-between p-4 border rounded-lg hover:shadow-lg transition">
-              <div className="">
-                <img
-                  src={pokemon.sprite}
-                  alt={pokemon.name}
-                  className="w-16 h-16 mr-4"
-                />
-                <div>
-                  <h2 className="text-xl font-semibold capitalize">
-                    {pokemon.name}
-                  </h2>
-                  <div className="flex space-x-2">
-                    {pokemon.types.map((type, index) => (
-                      <span
-                        key={index}
-                        className={`px-2 py-1 rounded-full text-sm text-white ${getTypeClass(type)}`}
-                      >
-                        {type}
-                      </span>
-                    ))}
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row md:space-x-4">
+        {/* Product List */}
+        <div className="flex-1 mb-8">
+          <div className="border border-gray-200 rounded-md p-4">
+            <h3 className="text-lg font-medium text-gray-800 mb-2">
+              Pocket list (2)
+            </h3>
+            <div className="w-full mb-4">
+              {/* Column headers */}
+              <div className="grid grid-cols-3 gap-4 mb-2">
+                <div className="text-gray-600 font-bold">Product name</div>
+                <div className="text-gray-600 font-bold">Quantity</div>
+              </div>
+
+              {/* Product items */}
+              <div className="border-t border-gray-200 py-4">
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <div className="flex items-center">
+                    <img
+                      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+                      alt="Bulbasaur"
+                      className="w-12 h-12 mr-4"
+                    />
+                    <div>
+                      <div className="font-bold text-gray-800">Bulbasaur</div>
+                      <div className="flex space-x-2 mt-1">
+                        <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                          Grass
+                        </span>
+                        <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                          Poison
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600">
-                    Abilities: {pokemon.abilities.join(", ")}
-                  </p>
+                  <div className="flex items-center justify-center border border-gray-300 rounded px-3">
+                    <div className="text-gray-800">1</div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button className="btn btn-ghost text-gray-500">
+                      <Trash2 />
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className=" p-4 ">
-                  <h2 className="text-xl font-bold mb-2">Quantity</h2>
-                  <p className="">{pokemon.quantity}</p>
-                </div>
-                <div className=" p-4 ">
-                  <button className="btn btn-ghost" onClick={() => removeFromPocket(pokemon.name)}>
-                    <Trash2 />
-                  </button>
+
+              <div className="border-t border-gray-200 py-4">
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <div className="flex items-center">
+                    <img
+                      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+                      alt="Ivysaur"
+                      className="w-12 h-12 mr-4"
+                    />
+                    <div>
+                      <div className="font-bold text-gray-800">Ivysaur</div>
+                      <div className="flex space-x-2 mt-1">
+                        <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                          Grass
+                        </span>
+                        <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                          Poison
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center border border-gray-300 rounded px-3">
+                    <div className="text-gray-800">4</div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button className="btn btn-ghost text-gray-500">
+                      <Trash2 />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </Link>
-        ))}
+          </div>
+        </div>
+
+        {/* Order Summary */}
+        <div className="flex-1 mb-8">
+          <div className="border border-gray-200 rounded-md">
+            <div className="bg-yellow-100 px-4 py-2 rounded-t-md">
+              <h3 className="text-lg font-medium text-gray-800">
+                Order Summary
+              </h3>
+            </div>
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-gray-600">Subtotal</p>
+                <p className="text-gray-800 font-bold">2 Product</p>
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-gray-600">Quantity</p>
+                <p className="text-gray-800 font-bold">6 Quantity</p>
+              </div>
+              <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full">
+                Proceed To Checkout
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
