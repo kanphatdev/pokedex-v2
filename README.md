@@ -1,8 +1,3 @@
-# React + Vite
+# Announcement from the developer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ฝากถึงคนที่ผ่านทางมาเห็นโปรเจคนี้ ผมอยากปล่อย Project นี้ให้เป็น open source หรือถ้าใครจะ เอาไปพัฒนาต่อ ให้เสร็จ ก็ได้ครับ หรือมีคนทำหน้าโปเก บอล ต่อจากผม ให้ เสร็จก็ได้ครับฟังก์ชั่น คล้ายๆกับ Add to Card ของ E commerce ครับ จริงๆ Project นี้เป็นpokedexบวกกับ โปเกม่อน Pocket ครับ ขอบคุณมากครับ
