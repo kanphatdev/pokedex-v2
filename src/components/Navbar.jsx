@@ -87,12 +87,14 @@ const Navbar = () => {
           <User className="text-yellow-500" />
           <span>Username</span>
         </div>
-        <div className="relative flex items-center">
-          <ShoppingBag className="text-yellow-500" />
-          <span className="absolute top-0 right-0 bg-neutral-800 text-white text-xs rounded-full px-1">
-            0
-          </span>
-        </div>
+        <Link to={"/pocketball"}>
+          <div className="relative flex items-center">
+            <ShoppingBag className="text-yellow-500" />
+            <span className="absolute top-0 right-0 bg-neutral-800 text-white text-xs rounded-full px-1">
+              0
+            </span>
+          </div>
+        </Link>
       </div>
     </nav>
   );

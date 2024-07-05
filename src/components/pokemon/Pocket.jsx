@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Trash2 } from "lucide-react"; // Make sure you have Lucide icons installed
 
 const Pocket = () => {
@@ -13,14 +13,14 @@ const Pocket = () => {
             </h3>
             <div className="w-full mb-4">
               {/* Column headers */}
-              <div className="grid grid-cols-3 gap-4 mb-2">
+              <div className="hidden sm:grid sm:grid-cols-3 gap-4 mb-2">
                 <div className="text-gray-600 font-bold">Product name</div>
                 <div className="text-gray-600 font-bold">Quantity</div>
               </div>
 
               {/* Product items */}
               <div className="border-t border-gray-200 py-4">
-                <div className="grid grid-cols-3 items-center gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
                   <div className="flex items-center">
                     <img
                       src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
@@ -51,7 +51,7 @@ const Pocket = () => {
               </div>
 
               <div className="border-t border-gray-200 py-4">
-                <div className="grid grid-cols-3 items-center gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
                   <div className="flex items-center">
                     <img
                       src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
